@@ -30,4 +30,4 @@
 # ``shelve``, ``marshal``, ``anydbm``, & ``bsddb``
 # (among others).
 
-*css linguist-detectable=false
+*.css linguist-detectable=false
