@@ -19,7 +19,8 @@ from wtforms import StringField, PasswordField
 from wtforms.validators import Email, Length, InputRequired
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from Util.Gmail_API import send_email
+from Util.Security import ts
 from Settings.App_Settings import SECRETKEY, TRACKMODIFICATIONS
 from Settings.DB_Settings import dbuser,dbpass,dbhost,dbname
 
@@ -40,7 +41,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Classes
+#region Classes
 class User(db.Model,UserMixin):
     __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True,autoincrement=True)
@@ -62,8 +63,9 @@ class User(db.Model,UserMixin):
     def __repr__(self):
         return '<User %r>' % self.full_name
 
+#endregion
 
-# Forms
+#region Forms
 class RegForm(FlaskForm):
     email = StringField('email',  validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     name = StringField('name',  validators=[InputRequired(), Length(max=30)])
@@ -72,6 +74,17 @@ class RegForm(FlaskForm):
 class LogInForm(FlaskForm):
     email = StringField('email',  validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=20)])
+
+class ForgotPasswordForm(FlaskForm):
+    email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
+
+class ResetPasswordForm(FlaskForm):
+    password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=20)])
+
+#endregion
+
+
+#region User Managment
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -130,6 +143,56 @@ def logout():
     except Exception:
         pass
     return redirect(url_for('Login'))
+
+@app.route('/resetpassword', methods=["GET", "POST"])
+def reset():
+    form = ForgotPasswordForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first_or_404()
+
+        subject = "Password reset requested"
+
+        token = ts.dumps(user.email, salt='recover-key')
+
+        recover_url = url_for(
+            'reset_with_token',
+            token=token,
+            _external=True)
+
+        html = render_template(
+            'email/recover_password.html',
+            recover_url=recover_url)
+
+        # Let's assume that send_email was defined in myapp/util.py
+        send_email(user.email, subject, html)
+
+        return redirect(url_for('landing_page'))
+    return render_template('forgot_password.html', form=form)
+
+@app.route('/resetpassword/<token>', methods=["GET", "POST"])
+def reset_with_token(token):
+    try:
+        email = ts.loads(token, salt="recover-key", max_age=86400)
+    except:
+        abort(404)
+
+    form = ResetPasswordForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=email).first_or_404()
+        user.password_hash = generate_password_hash(form.password.data, method='sha256')
+        db.session.add(user)
+        db.session.commit()
+
+        return redirect(url_for('Login'))
+
+    return render_template('reset_password.html', form=form, token=token)
+
+#endregion 
+
+
+
+
 
 @app.route("/")
 def landing_page():

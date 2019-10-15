@@ -1,5 +1,6 @@
 Settings/DB_Settings.py
 Settings/App_Settings.py
+Settings/
 *__pycache__
 static/css/.DS_Store
 static/fonts/.DS_Store
