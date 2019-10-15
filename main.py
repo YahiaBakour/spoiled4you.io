@@ -69,7 +69,6 @@ class RegForm(FlaskForm):
     name = StringField('name',  validators=[InputRequired(), Length(max=30)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=0, max=20)])
 
-
 class LogInForm(FlaskForm):
     email = StringField('email',  validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=20)])
@@ -80,14 +79,18 @@ def load_user(user_id):
     
 @app.route("/signup",methods=['GET','POST'])
 def register_user():
+
     form = RegForm()
     if request.method == 'GET':
-        return render_template('Signup.html', form=form)
+
+        return render_template('signup.html', form=form)
+
     elif request.method == 'POST':
+
         if form.validate_on_submit():
             existing_email = User.query.filter_by(email=form.email.data).first()
             if existing_email is not None:
-                return render_template('Signup.html', form=form, error="Email taken")  # We should return a pop up error msg as well account taken
+                return render_template('signup.html', form=form, error="Email taken")  # We should return a pop up error msg as well account taken
             else:
                 hashpass = generate_password_hash(form.password.data, method='sha256')
                 newUser = User(name=form.name.data, email=form.email.data,password_hash=hashpass,number_interactions=1,date=date.today(),phone_number="")
@@ -95,8 +98,38 @@ def register_user():
                 db.session.commit()
                 login_user(newUser)
                 return redirect(url_for('landing_page'))
-        return render_template('Signup.html', form=form) #We should return a pop up error msg as well bad input
+        return render_template('signup.html', form=form) #We should return a pop up error msg as well bad input
 
+@app.route("/Login", methods=['GET', 'POST'])
+@app.route("/login", methods=['GET', 'POST'])
+def Login():
+    form = LogInForm()
+
+    if request.method == 'GET':
+
+        if current_user.is_authenticated == True:
+            return redirect(url_for('landing_page'))
+        return render_template('Login.html', form=form)
+
+    elif request.method == 'POST':
+        check_user = User.query.filter_by(email=form.email.data).first()
+        if check_user:
+            if check_password_hash(check_user['password'], form.password.data):
+                login_user(check_user)
+                return redirect(url_for('landing_page'))
+            return render_template('Login.html', form=form, error="Incorrect password!")
+        else:
+            return render_template('Login.html', form=form, error="Email doesn't exist!")
+
+@app.route('/logout', methods = ['GET'])
+@login_required
+def logout():
+    logout_user()
+    try:
+        del session['access_token']
+    except Exception:
+        pass
+    return redirect("/login")
 
 @app.route("/")
 def landing_page():
