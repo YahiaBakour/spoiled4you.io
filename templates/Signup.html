@@ -8,7 +8,11 @@
                 if($('#email').val() == ''){
                     alert( "Email required." );
                     event.preventDefault();
-                } else if($('#name').val() == '') {
+                } else if(!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test($('#email').val()))){
+                    alert("Invalid email address");
+                    event.preventDefault();
+                }
+                else if($('#name').val() == '') {
                     alert( "Name required." );
                     event.preventDefault();
                 } else if($('#password').val() == ''){

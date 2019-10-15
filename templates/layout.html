@@ -29,7 +29,12 @@
 					<li><div class="tooltip"><a href="#" class="bt-icon icon-home">HomePage</a><span class="tooltiptext">Home</span></div></li>
 					<li><div class="tooltip"><a href="#" class="bt-icon icon-newspaper">AboutUS</a><span class="tooltiptext">About Us</span></div></li>
 					<li><div class="tooltip"><a href="#" class="bt-icon icon-email">Schedule a Spoiler</a><span class="tooltiptext">Schedule a Spoiler</span></div></li>
-					<li><div class="tooltip"><a href="/login" class="bt-icon icon-user-outline">Login/Logout</a><span class="tooltiptext">Login/Logout</span></div></li>
+					{% if loggedin %}
+						<li><div class="tooltip"><a href="/logout" class="bt-icon icon-user-outline">Logout</a><span class="tooltiptext">Logout</span></div></li>
+					{% else %}
+						<li><div class="tooltip"><a href="/login" class="bt-icon icon-user-outline">Login</a><span class="tooltiptext">Login</span></div></li>
+					{% endif %}
+
 				</ul>
             </nav>
 		</div><!-- /container -->

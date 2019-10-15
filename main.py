@@ -98,7 +98,7 @@ def register_user():
                 db.session.commit()
                 login_user(newUser)
                 return redirect(url_for('landing_page'))
-        return render_template('signup.html', form=form) #We should return a pop up error msg as well bad input
+        return render_template('signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
 @app.route("/Login", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
@@ -109,17 +109,17 @@ def Login():
 
         if current_user.is_authenticated == True:
             return redirect(url_for('landing_page'))
-        return render_template('Login.html', form=form)
+        return render_template('Login.html', form=form, loggedin = current_user.is_authenticated)
 
     elif request.method == 'POST':
         check_user = User.query.filter_by(email=form.email.data).first()
         if check_user:
-            if check_password_hash(check_user['password'], form.password.data):
+            if check_password_hash(check_user.password_hash, form.password.data):
                 login_user(check_user)
                 return redirect(url_for('landing_page'))
-            return render_template('Login.html', form=form, error="Incorrect password!")
+            return render_template('Login.html', form=form, error="Incorrect password!", loggedin = current_user.is_authenticated)
         else:
-            return render_template('Login.html', form=form, error="Email doesn't exist!")
+            return render_template('Login.html', form=form, error="Email doesn't exist!", loggedin = current_user.is_authenticated)
 
 @app.route('/logout', methods = ['GET'])
 @login_required
@@ -129,13 +129,12 @@ def logout():
         del session['access_token']
     except Exception:
         pass
-    return redirect("/login")
+    return redirect(url_for('Login'))
 
 @app.route("/")
 def landing_page():
-    peter = User.query.filter_by(email='test3@testing.com').all()
-    print(peter)
-    return render_template('landing_page.html')
+    print(current_user.is_authenticated)
+    return render_template('landing_page.html', loggedin = current_user.is_authenticated)
 
 
 if __name__ == '__main__':
