@@ -1,0 +1,8 @@
+Settings/DB_Settings.py
+Settings/App_Settings.py
+*__pycache__
+static/css/.DS_Store
+static/fonts/.DS_Store
+static/fonts/codropsicons/.DS_Store
+static/fonts/demoicons/license.txt
+static/js/.DS_Store

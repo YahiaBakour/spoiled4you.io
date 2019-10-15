@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+		{% block head %} <title>Yahia's Web App</title> {% endblock %}
+		<meta name="description" content="Responsive Animated Border Menus with CSS Transitions" />
+		<meta name="keywords" content="navigation, menu, responsive, border, overlay, css transition" />
+		<meta name="author" content="Codrops" />
+		<link rel="shortcut icon" href="../favicon.ico">
+		<link rel="stylesheet" type="text/css" href="static/css/normalize.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/demo.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/icons.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/tooltips.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/style2.css" />
+		<link rel="stylesheet" type="text/css" href="static/css/messages.css" />
+		<script src="static/js/modernizr.custom.js"></script>
+    </head>
+    
+	<body>
+		<div class="container">
+			<header class="codrops-header" style="max-width:100%;">
+                    {% block content %} {% endblock %}
+            </header>
+			<nav id="bt-menu" class="bt-menu">
+				<a href="#" class="bt-menu-trigger"><span>Menu</span></a>
+				<ul>
+					<li><div class="tooltip"><a href="#" class="bt-icon icon-home">HomePage</a><span class="tooltiptext">Home</span></div></li>
+					<li><div class="tooltip"><a href="#" class="bt-icon icon-newspaper">AboutUS</a><span class="tooltiptext">About Us</span></div></li>
+					<li><div class="tooltip"><a href="#" class="bt-icon icon-email">Schedule a Spoiler</a><span class="tooltiptext">Schedule a Spoiler</span></div></li>
+					<li><div class="tooltip"><a href="/signup" class="bt-icon icon-user-outline">Login/Logout</a><span class="tooltiptext">Login/Logout</span></div></li>
+				</ul>
+            </nav>
+		</div><!-- /container -->
+	</body>
+	{% block script %} {% endblock %}
+	<script src="static/js/classie.js"></script>
+	<script src="static/js/borderMenu.js"></script>
+	{% block style %} {% endblock %}
+<!--Bubbles from : https://codepen.io/colorlib/pen/aaaoVJ-->
+</html>
