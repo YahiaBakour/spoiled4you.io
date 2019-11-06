@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+
+{% block script %} 
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script>
+$(document).ready(function(){
+    $("#movie_name").autocomplete({
+        source: "getmovieinfo",
+            focus: function( event, ui ) {
+            return false;
+        },
+        select: function( event, ui ) {
+            $("#movie_name").val(ui.item.title);
+        }
+    })
+});
+
+  </script>
+{% endblock %}
+
+
+{% block style%}
+<style>
+/* LIST #8 */
+ {  }
+ .ui-autocomplete { list-style:none;}
+ .ui-autocomplete li { font-family:Georgia,serif,Times; font-size:18px; }
+ .ui-autocomplete li a { display:block; width:300px; height:28px; background-color:#0b132b; border-left:5px solid #1c2541; border-right:5px solid #1c2541; padding-left:10px;
+  text-decoration:none; color:#bfe1f1; }
+  .ui-autocomplete li a:hover {  -moz-transform:rotate(-5deg); -moz-box-shadow:10px 10px 20px #3a506b;
+  -webkit-transform:rotate(-5deg); -webkit-box-shadow:10px 10px 20px #3a506b;
+  transform:rotate(-5deg); box-shadow:10px 10px 20px #3a506b; }
+</style>
+{% endblock %}
+{% block head %}
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="static/css/bubbles.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Send a spoiler</title>
+{% endblock %}
+
+{% block content %}
+    <div class="main-w3layouts wrapper">
+            <h1 class="sign">Create your spoiler</h2>
+        {% if error %}
+            <div class="isa_error">
+                    <i class="fa fa-times-circle"></i>
+                    
+            {{ error }}</div>
+        {% endif %}
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form id="movieform" action="/build-spoiler" method="post" style="text-align:center">
+                    {{ form.movie_name(class_="input", placeholder="Movie Name", id="movie_name")}}
+                <br>
+                    {{ form.hidden_tag() }}
+                <br>
+                <br>
+                <br>
+                <br>
+
+                <input type="submit" class="submit" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

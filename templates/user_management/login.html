@@ -30,9 +30,9 @@ $( document ).ready(function() {
 {% block content %}
   
     <div class="main-w3layouts wrapper">
-        <h1 style="color:white;" class="sign" align="center">Login to start</h1>
+        <h1 style="color:white;" class="sign">Login to start</h1>
         {% if error %}
-            <div class="isa_error" align="center">
+            <div class="isa_error" >
                     <i class="fa fa-times-circle"></i>
             {{ error }}</div>
         {% endif %}
@@ -44,9 +44,9 @@ $( document ).ready(function() {
                         {{ form.password(class_="input", placeholder="Password", id="password")}}
                         {{ form.hidden_tag() }}
                     <br/> <br />
-                    <input type="submit" class="FORMSUBMIT" align="center" value="Log In">
-                    <br><a href="./signup" class="FORMSUBMIT" align="center">Register<a>
-                    <p class="forgot" align="center">
+                    <input type="submit"  value="Log In">
+                    <br><a href="./signup" >Register<a>
+                    <p class="forgot" >
                     <a href="./resetpassword">Forgot Password?</a></p>
                 </form>
             </div>

@@ -10,12 +10,12 @@ SET UP INFO:
 8. Do ‘CTRL+C’ in your terminal to kill the instance.
 9. To auto update the instance once you save ,export FLASK_DEBUG=1 or windows:  $env:FLASK_DEBUG = "main.py"
 '''
-from flask import Flask, render_template, request,redirect,url_for
+from flask import Flask, render_template, request,redirect,url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 from flask_wtf.csrf import CSRFProtect
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, DateTimeField, TextAreaField
 from wtforms.validators import Email, Length, InputRequired
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -23,8 +23,9 @@ from Util.Gmail_API import send_email
 from Util.Security import ts
 from Settings.App_Settings import SECRETKEY, TRACKMODIFICATIONS
 from Settings.DB_Settings import dbuser,dbpass,dbhost,dbname
-
-
+from APIs import Wikipedia
+from APIs.movies import movies
+from APIs.spoiler import Spoiler
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = SECRETKEY
@@ -40,6 +41,8 @@ csrf.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+SPOILER = Spoiler()
 
 #region Classes
 class User(db.Model,UserMixin):
@@ -81,6 +84,17 @@ class ForgotPasswordForm(FlaskForm):
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=20)])
 
+class PickAMovieForm(FlaskForm):
+    movie_name = StringField('movie_name',  validators=[InputRequired(), Length(max=30)])
+
+
+class BuildASpoiler(FlaskForm):
+    movie_name = StringField('movie_name',  validators=[InputRequired(), Length(max=30)])
+    victim_email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
+    spoiler = TextAreaField('spoiler',  validators=[InputRequired()], id="spoiler")
+
+
+
 #endregion
 
 
@@ -96,14 +110,14 @@ def register_user():
     form = RegForm()
     if request.method == 'GET':
 
-        return render_template('signup.html', form=form)
+        return render_template('user_management/signup.html', form=form)
 
     elif request.method == 'POST':
 
         if form.validate_on_submit():
             existing_email = User.query.filter_by(email=form.email.data).first()
             if existing_email is not None:
-                return render_template('signup.html', form=form, error="Email taken")  # We should return a pop up error msg as well account taken
+                return render_template('user_management/signup.html', form=form, error="Email taken")  # We should return a pop up error msg as well account taken
             else:
                 hashpass = generate_password_hash(form.password.data, method='sha256')
                 newUser = User(name=form.name.data, email=form.email.data,password_hash=hashpass,number_interactions=1,date=date.today(),phone_number="")
@@ -111,7 +125,7 @@ def register_user():
                 db.session.commit()
                 login_user(newUser)
                 return redirect(url_for('landing_page'))
-        return render_template('signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
+        return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
 @app.route("/Login", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
@@ -122,7 +136,7 @@ def Login():
 
         if current_user.is_authenticated == True:
             return redirect(url_for('landing_page'))
-        return render_template('Login.html', form=form, loggedin = current_user.is_authenticated)
+        return render_template('user_management/login.html', form=form, loggedin = current_user.is_authenticated)
 
     elif request.method == 'POST':
         check_user = User.query.filter_by(email=form.email.data).first()
@@ -130,9 +144,9 @@ def Login():
             if check_password_hash(check_user.password_hash, form.password.data):
                 login_user(check_user)
                 return redirect(url_for('landing_page'))
-            return render_template('Login.html', form=form, error="Incorrect password!", loggedin = current_user.is_authenticated)
+            return render_template('user_management/login.html', form=form, error="Incorrect password!", loggedin = current_user.is_authenticated)
         else:
-            return render_template('Login.html', form=form, error="Email doesn't exist!", loggedin = current_user.is_authenticated)
+            return render_template('user_management/login.html', form=form, error="Email doesn't exist!", loggedin = current_user.is_authenticated)
 
 @app.route('/logout', methods = ['GET'])
 @login_required
@@ -159,6 +173,7 @@ def reset():
             token=token,
             _external=True)
 
+
         html = render_template(
             'email/recover_password.html',
             recover_url=recover_url)
@@ -167,7 +182,7 @@ def reset():
         send_email(user.email, subject, html)
 
         return redirect(url_for('landing_page'))
-    return render_template('forgot_password.html', form=form)
+    return render_template('user_management/forgot_password.html', form=form)
 
 @app.route('/resetpassword/<token>', methods=["GET", "POST"])
 def reset_with_token(token):
@@ -186,12 +201,47 @@ def reset_with_token(token):
 
         return redirect(url_for('Login'))
 
-    return render_template('reset_password.html', form=form, token=token)
+    return render_template('user_management/reset_password.html', form=form, token=token)
 
 #endregion 
 
 
+#region spoiler entry
 
+
+@app.route("/getmovieinfo",methods=['GET'])
+def getmovieinfo():
+    movie = request.args.get('term')
+    movieC = movies()
+    suggestions = movieC.getmoviesuggestions(movie)
+    print(suggestions)
+    return jsonify(suggestions) 
+
+
+
+
+@app.route("/pick-a-movie",methods=['GET','POST'])
+def pick_movie():
+    form = PickAMovieForm()
+    if request.method == 'GET':  
+        return render_template('pick_a_movie.html', form = form, loggedin = current_user.is_authenticated)
+
+@app.route("/build-spoiler",methods=['GET','POST'])
+def build_spoiler():
+    dat = request.form
+    try:
+        name = dat.to_dict()['movie_name']
+        if(name):
+            spoiler = SPOILER.GenerateWikipediaSpoiler(name)
+    except Exception:
+        spoiler = None
+    form = BuildASpoiler(spoiler=spoiler)
+    return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
+
+
+
+
+#endregion
 
 
 @app.route("/")

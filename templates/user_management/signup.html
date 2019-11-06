@@ -40,9 +40,9 @@
 
 {% block content %}
     <div class="main-w3layouts wrapper">
-            <h1 class="sign" align="center">Create an Account</h2>
+            <h1 class="sign">Create an Account</h2>
         {% if error %}
-            <div class="isa_error" align="center">
+            <div class="isa_error">
                     <i class="fa fa-times-circle"></i>
                     
             {{ error }}</div>
@@ -58,24 +58,25 @@
                 <br>
                     {{ form.hidden_tag() }}
 
-                <input id="confirmPassword" class="input" type="password" align="center" placeholder="Confirm Password">
+                <input id="confirmPassword" class="input" type="password"   placeholder="Confirm Password">
                 <br>
                 <br>
-                <input type="submit" class="submit" align="center" value="Submit">
+                <input type="submit" class="submit"   value="Submit">
+                <br><a href="./login" >Login Instead</a>
                 </form>
             </div>
         </div>
 		<ul class="colorlib-bubbles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
 {% endblock %}
