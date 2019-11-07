@@ -1,15 +1,3 @@
-'''
-SET UP INFO:
-1. Install Python 3
-2. CD into the directory
-3. Run 'pip3 install Flask'
-4. Run 'pip3 install pymongo' -- To be used soon
-5. Run 'export FLASK_APP=main.py' or For windows: $env:FLASK_APP = "main.py" , or set FLASK_APP=main.py
-6. Run 'python3 -m flask run'
-7. Go to http://127.0.0.1:5000/ (or http://localhost:5000/) in your browser
-8. Do ‘CTRL+C’ in your terminal to kill the instance.
-9. To auto update the instance once you save ,export FLASK_DEBUG=1 or windows:  $env:FLASK_DEBUG = "main.py"
-'''
 from flask import Flask, render_template, request,redirect,url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
@@ -27,8 +15,13 @@ from APIs import Wikipedia
 from APIs.movies import movies
 from APIs.spoiler import Spoiler
 from flask_apscheduler import APScheduler
+from itertools import count
 import time
 
+'''
+Setup the app with all of its environment
+'''
+#region AppSetup
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = SECRETKEY
@@ -50,7 +43,12 @@ SPOILER = Spoiler()
 scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
- 
+#endregion
+
+
+'''
+Setup Classes Needed
+'''
 #region Classes
 class User(db.Model,UserMixin):
     __tablename__ = 'Users'
@@ -72,16 +70,20 @@ class User(db.Model,UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.full_name
-
 #endregion
 
+
+
+'''
+Setup Forms
+'''
 #region Forms
-class RegForm(FlaskForm):
+class RegistrationForm(FlaskForm):   
     email = StringField('email',  validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     name = StringField('name',  validators=[InputRequired(), Length(max=30)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=0, max=20)])
 
-class LogInForm(FlaskForm):
+class LoginForm(FlaskForm):
     email = StringField('email',  validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     password = PasswordField('password', validators=[InputRequired(), Length(min=8, max=20)])
 
@@ -94,17 +96,15 @@ class ResetPasswordForm(FlaskForm):
 class PickAMovieForm(FlaskForm):
     movie_name = StringField('movie_name',  validators=[InputRequired(), Length(max=30)])
 
-
 class BuildASpoiler(FlaskForm):
     movie_name = StringField('movie_name',  validators=[InputRequired(), Length(max=30)])
     victim_email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     spoiler = TextAreaField('spoiler',  validators=[InputRequired()], id="spoiler")
-
-
-
 #endregion
 
-
+'''
+User Management Authentication 
+'''
 #region User Managment
 
 @login_manager.user_loader
@@ -113,14 +113,12 @@ def load_user(user_id):
     
 @app.route("/signup",methods=['GET','POST'])
 def register_user():
+    form = RegistrationForm()
 
-    form = RegForm()
     if request.method == 'GET':
-
         return render_template('user_management/signup.html', form=form)
 
     elif request.method == 'POST':
-
         if form.validate_on_submit():
             existing_email = User.query.filter_by(email=form.email.data).first()
             if existing_email is not None:
@@ -134,10 +132,9 @@ def register_user():
                 return redirect(url_for('landing_page'))
         return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
-@app.route("/Login", methods=['GET', 'POST'])
 @app.route("/login", methods=['GET', 'POST'])
 def Login():
-    form = LogInForm()
+    form = LoginForm()
 
     if request.method == 'GET':
 
@@ -170,25 +167,20 @@ def reset():
     form = ForgotPasswordForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first_or_404()
-
         subject = "Password reset requested"
-
         token = ts.dumps(user.email, salt='recover-key')
-
         recover_url = url_for(
             'reset_with_token',
             token=token,
             _external=True)
-
-
         html = render_template(
             'email/recover_password.html',
             recover_url=recover_url)
 
-        # Let's assume that send_email was defined in myapp/util.py
         send_email(user.email, subject, html)
 
         return redirect(url_for('landing_page'))
+
     return render_template('user_management/forgot_password.html', form=form)
 
 @app.route('/resetpassword/<token>', methods=["GET", "POST"])
@@ -213,10 +205,8 @@ def reset_with_token(token):
 #endregion 
 
 
-#region spoiler entry
-
-
-@app.route("/getmovieinfo",methods=['GET'])
+#region spoiler
+@app.route("/getmovieinfo",methods=['GET'])     # Used for Autocomplete
 def getmovieinfo():
     movie = request.args.get('term')
     movieC = movies()
@@ -225,7 +215,7 @@ def getmovieinfo():
 
 
 
-@app.route("/pick-a-movie",methods=['GET','POST'])
+@app.route("/pick-a-movie",methods=['GET','POST'])   
 def pick_movie():
     form = PickAMovieForm()
     if request.method == 'GET':  
@@ -244,16 +234,15 @@ def build_spoiler():
     return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
 
 
+counter = lambda c=count(): next(c)
 @app.route("/scheduler-spoiler",methods=['GET','POST'])
 def scheduler_spoiler():
     dat = request.form.to_dict()
     form = BuildASpoiler()
-    app.apscheduler.add_job(func=sched_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j2')
+    app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
     return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
-    #app.apscheduler.add_job(func=scheduled_task, trigger='date', args=[i], id='j'+str(i))
 
-def sched_email(email,spoiler):
-    # Let's assume that send_email was defined in myapp/util.py
+def schedule_email(email,spoiler):
     send_email(email, "subject", spoiler)
 
 #endregion
