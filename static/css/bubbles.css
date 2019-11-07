@@ -130,7 +130,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   }
   
   .main-agileinfo {
-    width: 100%;
+    width: 40%;
     margin: 3em auto;
     background: rgba(0, 0, 0, 0.18);
     background-size: cover;
@@ -349,10 +349,7 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   }
   
   /*-- //copyright --*/
-  .wrapper {
-    position: relative;
-    overflow: hidden;
-  }
+
   
   .colorlib-bubbles {
     position: absolute;
@@ -541,10 +538,6 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
     .main-agileinfo {
       margin: 2em auto;
     }
-  
-    .main-agileinfo {
-      width: 100%;
-    }
   }
   
   @media(max-width:1280px) {
@@ -576,9 +569,6 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   }
   
   @media(max-width:900px) {
-    .main-agileinfo {
-      width: 100%;
-    }
   
     input[type="text"], input[type="email"], input[type="password"] {
       width: 93%;
@@ -623,9 +613,6 @@ html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockq
   }
   
   @media(max-width:568px) {
-    .main-agileinfo {
-      width: 100%;
-    }
   
     .colorlibcopy-agile p {
       padding: 0 ;

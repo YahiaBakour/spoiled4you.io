@@ -6,7 +6,7 @@
 {% endblock %}
 
 
-{% block style%}
+{% block style %}
 <style>
 #spoiler{
     height:20em;
@@ -36,11 +36,14 @@
         {% endif %}
         <div class="main-agileinfo">
             <div class="agileits-top">
-                <form id="movieform" action="/build-spoiler" method="post" style="text-align:center">
+                <form id="movieform" action="/scheduler-spoiler" method="post" style="text-align:center">
+                    <p>Movie Name</p>
                     {{ form.movie_name(class_="input", placeholder="Movie Name", id="movie_name")}}
                 <br>
+                    <p>Email</p>
                     {{ form.victim_email(class_="input", placeholder="Victim's Email", id="victim_email")}}
                 <br>
+                    <p>Spoiler </p>
                     {{ form.spoiler(class__="spoiler", placeholder="spoiler", id="spoiler")}}
                 <br>
                 <br>
@@ -51,9 +54,21 @@
                 <br>
                 <br>
 
-                <input type="submit" class="submit" value="Submit">
+                <input type="submit" class="submit" value="Schedule it">
                 </form>
             </div>
         </div>
+		<ul class="colorlib-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
 {% endblock %}

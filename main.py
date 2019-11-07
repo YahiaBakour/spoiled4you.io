@@ -26,6 +26,9 @@ from Settings.DB_Settings import dbuser,dbpass,dbhost,dbname
 from APIs import Wikipedia
 from APIs.movies import movies
 from APIs.spoiler import Spoiler
+from flask_apscheduler import APScheduler
+import time
+
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = SECRETKEY
@@ -44,6 +47,10 @@ login_manager.login_view = 'login'
 
 SPOILER = Spoiler()
 
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+ 
 #region Classes
 class User(db.Model,UserMixin):
     __tablename__ = 'Users'
@@ -214,9 +221,7 @@ def getmovieinfo():
     movie = request.args.get('term')
     movieC = movies()
     suggestions = movieC.getmoviesuggestions(movie)
-    print(suggestions)
     return jsonify(suggestions) 
-
 
 
 
@@ -239,7 +244,17 @@ def build_spoiler():
     return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
 
 
+@app.route("/scheduler-spoiler",methods=['GET','POST'])
+def scheduler_spoiler():
+    dat = request.form.to_dict()
+    form = BuildASpoiler()
+    app.apscheduler.add_job(func=sched_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j2')
+    return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
+    #app.apscheduler.add_job(func=scheduled_task, trigger='date', args=[i], id='j'+str(i))
 
+def sched_email(email,spoiler):
+    # Let's assume that send_email was defined in myapp/util.py
+    send_email(email, "subject", spoiler)
 
 #endregion
 
