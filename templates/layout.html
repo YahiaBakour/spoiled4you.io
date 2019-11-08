@@ -4,17 +4,17 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
 		{% block head %} <title>Yahia's Web App</title> {% endblock %}
-		<meta name="description" content="Responsive Animated Border Menus with CSS Transitions" />
-		<meta name="keywords" content="navigation, menu, responsive, border, overlay, css transition" />
-		<meta name="author" content="Codrops" />
-		<link rel="shortcut icon" href="../favicon.ico">
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/normalize.css" />
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/demo.css" />
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/icons.css" />
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/tooltips.css" />
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/style.css" />
-		<link rel="stylesheet" type="text/css" href="http://127.0.0.1:5000/static/css/messages.css" />
-		<script src="http://127.0.0.1:5000/static/js/modernizr.custom.js"></script>
+		<meta name="description" content="A Web-Application made by Yahia Bakour which generates spoilers to be sent to your friends!" />
+		<meta name="keywords" content="Spoiled for you, Movie Spoiler, Spoiler, Spoiled4you, Spoiler, Spoil.io" />
+		<meta name="author" content="Yahia Bakour" />
+		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icons.css') }}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tooltips.css') }}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}"/>
+		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/messages.css') }}"/>
+		<script src="{{ url_for('static', filename='js/modernizr.custom.js') }}"></script>
     </head>
     
 	<body>
@@ -39,8 +39,8 @@
 		</div><!-- /container -->
 	</body>
 	{% block script %} {% endblock %}
-	<script src="http://127.0.0.1:5000/static/js/classie.js"></script>
-	<script src="http://127.0.0.1:5000/static/js/borderMenu.js"></script>
+	<script src="{{ url_for('static', filename='js/classie.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/borderMenu.js') }}"></script>
 	{% block style %} {% endblock %}
 <!--Bubbles from : https://codepen.io/colorlib/pen/aaaoVJ-->
 </html>
