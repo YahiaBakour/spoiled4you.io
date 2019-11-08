@@ -1,5 +1,125 @@
 {% extends 'layout.html' %}
 
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/rainbow.css') }}" />
+
+{% endblock %}
+
 {% block content %}
-<p>HELLO THERE</p>
+<h1 class="rainbow-name topofpage"><b>Spoiled For You</b></h1>
+<h2>A Gimmicky Project to bug your friends </h2>
+<h3> Made by Yahia Bakour</h3>
+<div class="container-content">
+        <p>        </p>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="container-2">
+                <a href="/login">
+                    <div class="btn btn-two">
+                    <span>Get Started</span>
+                    </div>
+                </a>   
+              </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block style %}
+<style>
+.topofpage{
+    letter-spacing: 2px;
+}
+.container-content{
+    color: #EFE7DA;
+    padding: 0 0 0 1em;
+}
+
+
+.rainbow-name{
+    font-weight:bold;
+}
+
+.rainbow-name:hover {
+   /* Font options */
+  text-shadow: 2px 2px 4px #000000;
+  
+   /* Chrome, Safari, Opera */
+  -webkit-animation: rainbow 5s infinite; 
+  
+  /* Internet Explorer */
+  -ms-animation: rainbow 5s infinite;
+  
+  /* Standar Syntax */
+  animation: rainbow 5s infinite; 
+}
+.btn {
+  position: relative;
+  color: white;
+  width: 256px;
+  height: 64px;
+  line-height: 64px;
+  display: block;
+  margin: auto;
+  transition: all 0.3s;
+  span {
+    transition: all 0.3s;
+    transform: scale(1, 1);
+  }
+}
+
+.btn::before, .btn::after {
+  content: '';
+  position: absolute;
+  transition: all 0.3s;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+/* BTN TWO */
+.btn-two::before, .btn-two::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+    height: 100%;
+  bottom: 0;
+    left: 0;
+    z-index: 1;
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-two:hover::after {
+  animation-name: rotatecw;
+  animation-duration: 2s;
+}
+.btn-two:hover::before {
+  animation-name: rotateccw; 
+  animation-duration: 3s;
+}
+.btn-two:hover::after, .btn-two:hover::before {
+  left: 96px;
+  width: 64px;
+  
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes rotatecw {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+@keyframes rotateccw {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(-360deg);}
+}
+
+</style>
 {% endblock %}

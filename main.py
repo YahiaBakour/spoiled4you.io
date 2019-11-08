@@ -132,6 +132,7 @@ def register_user():
                 return redirect(url_for('landing_page'))
         return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
+
 @app.route("/login", methods=['GET', 'POST'])
 def Login():
     form = LoginForm()

@@ -25,17 +25,18 @@
 			<nav id="bt-menu" class="bt-menu">
 				<a href="#" class="bt-menu-trigger"><span>Menu</span></a>
 				<ul>
-					<li><div class="tooltip"><a href="#" class="bt-icon icon-home">HomePage</a><span class="tooltiptext">Home</span></div></li>
-					<li><div class="tooltip"><a href="#" class="bt-icon icon-newspaper">AboutUS</a><span class="tooltiptext">About Us</span></div></li>
-					<li><div class="tooltip"><a href="/pick-a-movie" class="bt-icon icon-email">Schedule a Spoiler</a><span class="tooltiptext">Schedule a Spoiler</span></div></li>
+					<li><a href="#" class="bt-icon icon-home">Home</a></li>
+					<li><a href="#" class="bt-icon icon-newspaper">About</a></li>
+					<li><a href="/pick-a-movie" class="bt-icon icon-email">Spoiler</a></li>
+					<li><a href="#" class="bt-icon icon-email">History</a></li>
+					<li><a href="#" class="bt-icon icon-email">Settings</a></li>
 					{% if loggedin %}
-						<li><div class="tooltip"><a href="/logout" class="bt-icon icon-user-outline">Logout</a><span class="tooltiptext">Logout</span></div></li>
+					<li><a href="/logout" class="bt-icon icon-user-outline">Logout</a></li>
 					{% else %}
-						<li><div class="tooltip"><a href="/login" class="bt-icon icon-user-outline">Login</a><span class="tooltiptext">Login</span></div></li>
+					<li><a href="/login" class="bt-icon icon-user-outline">Login</a></li>
 					{% endif %}
-
 				</ul>
-            </nav>
+			</nav>
 		</div><!-- /container -->
 	</body>
 	{% block script %} {% endblock %}
