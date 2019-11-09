@@ -242,7 +242,7 @@ def getmovieinfo():
 def pick_movie():
     form = PickAMovieForm()
     if request.method == 'GET':  
-        return render_template('pick_a_movie.html', form = form, loggedin = current_user.is_authenticated)
+        return render_template('spoilers/pick_a_movie.html', form = form, loggedin = current_user.is_authenticated)
 
 @app.route("/build-spoiler",methods=['GET','POST'])
 def build_spoiler():
@@ -254,7 +254,7 @@ def build_spoiler():
     except Exception:
         spoiler = None
     form = BuildASpoiler(spoiler=spoiler)
-    return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
+    return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
 
 
 counter = lambda c=count(): next(c)
@@ -266,7 +266,7 @@ def scheduler_spoiler():
     db.session.add(newSpoiler)
     db.session.commit()
     app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
-    return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
+    return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
 
 def schedule_email(email,spoiler):
     send_email(email, "subject", spoiler)
