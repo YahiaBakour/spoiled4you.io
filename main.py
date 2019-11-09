@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request,redirect,url_for, jsonify
+from flask import Flask, render_template, request,redirect,url_for, jsonify, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import date
 from flask_wtf.csrf import CSRFProtect
@@ -70,6 +70,27 @@ class User(db.Model,UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.full_name
+
+class SentSpoiler(db.Model,UserMixin):
+    __tablename__ = 'SentSpoilers'
+    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
+    from_user = db.Column(db.String(30), nullable=False)
+    to_email = db.Column(db.String(30), nullable=False,unique=True)
+    spoiler = db.Column(db.String(), nullable=False)
+    date_sent = db.Column(db.String(50), nullable=False)
+
+    def __init__(self, from_user, to_email, spoiler):
+        self.from_user = from_user
+        self.to_email = to_email
+        self.spoiler = spoiler
+        self.date_sent = date.today()
+
+    def __repr__(self):
+        return '<from: %r , to:%r , date: %r>' % self.from_user, self.to_email, self.date_sent
+
+
+
+
 #endregion
 
 
@@ -148,6 +169,7 @@ def Login():
         if check_user:
             if check_password_hash(check_user.password_hash, form.password.data):
                 login_user(check_user)
+                session['email'] = form.email.data
                 return redirect(url_for('landing_page'))
             return render_template('user_management/login.html', form=form, error="Incorrect password!", loggedin = current_user.is_authenticated)
         else:
@@ -240,6 +262,9 @@ counter = lambda c=count(): next(c)
 def scheduler_spoiler():
     dat = request.form.to_dict()
     form = BuildASpoiler()
+    newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
+    db.session.add(newSpoiler)
+    db.session.commit()
     app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
     return render_template('build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
 
