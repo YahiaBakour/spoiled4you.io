@@ -86,7 +86,7 @@ class SentSpoiler(db.Model,UserMixin):
         self.date_sent = date.today()
 
     def __repr__(self):
-        return '<from: %r , to:%r , date: %r>' % self.from_user, self.to_email, self.date_sent
+        return '<from: {0} , to:{1} , date: {2}>'.format(self.from_user, self.to_email, self.date_sent)
 
 
 
@@ -269,7 +269,7 @@ def scheduler_spoiler():
     return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
 
 def schedule_email(email,spoiler):
-    send_email(email, "subject", spoiler)
+    send_email(email, "This is not a spoiler", spoiler)
 
 #endregion
 
@@ -278,6 +278,13 @@ def schedule_email(email,spoiler):
 def landing_page():
     print(current_user.is_authenticated)
     return render_template('landing_page.html', loggedin = current_user.is_authenticated)
+
+@app.route("/spoiler-history")
+def spoiler_history():
+    data = SentSpoiler.query.filter_by(from_user=session['email']).all()
+    print(data)
+    return render_template('spoilers/history.html', loggedin = current_user.is_authenticated, data = list(data))
+
 
 
 if __name__ == '__main__':
