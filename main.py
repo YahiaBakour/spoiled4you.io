@@ -159,10 +159,10 @@ def Login():
     form = LoginForm()
 
     if request.method == 'GET':
-
+        error_message = request.args.get('error_message')
         if current_user.is_authenticated == True:
             return redirect(url_for('landing_page'))
-        return render_template('user_management/login.html', form=form, loggedin = current_user.is_authenticated)
+        return render_template('user_management/login.html', form=form, loggedin = current_user.is_authenticated, error=error_message)
 
     elif request.method == 'POST':
         check_user = User.query.filter_by(email=form.email.data).first()
@@ -231,60 +231,84 @@ def reset_with_token(token):
 #region spoiler
 @app.route("/getmovieinfo",methods=['GET'])     # Used for Autocomplete
 def getmovieinfo():
-    movie = request.args.get('term')
-    movieC = movies()
-    suggestions = movieC.getmoviesuggestions(movie)
-    return jsonify(suggestions) 
+    if(current_user.is_authenticated):
+        movie = request.args.get('term')
+        movieC = movies()
+        suggestions = movieC.getmoviesuggestions(movie)
+        return jsonify(suggestions) 
+    else:
+        return redirect(url_for('Login',error_message = "Interesting seeing you here, login to view stuff"))
 
 
 
 @app.route("/pick-a-movie",methods=['GET','POST'])   
 def pick_movie():
-    form = PickAMovieForm()
-    if request.method == 'GET':  
-        return render_template('spoilers/pick_a_movie.html', form = form, loggedin = current_user.is_authenticated)
+    if(current_user.is_authenticated):
+        form = PickAMovieForm()
+        if request.method == 'GET':  
+            return render_template('spoilers/pick_a_movie.html', form = form, loggedin = current_user.is_authenticated)
+    else:
+        return redirect(url_for('Login',error_message = "Login to pick a movie and start building a spoiler"))
 
 @app.route("/build-spoiler",methods=['GET','POST'])
 def build_spoiler():
-    dat = request.form
-    try:
-        name = dat.to_dict()['movie_name']
-        if(name):
-            spoiler = SPOILER.GenerateWikipediaSpoiler(name)
-    except Exception:
-        spoiler = None
-    form = BuildASpoiler(spoiler=spoiler)
-    return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
+    if(current_user.is_authenticated):
+        dat = request.form
+        try:
+            name = dat.to_dict()['movie_name']
+            if(name):
+                spoiler = SPOILER.GenerateWikipediaSpoiler(name)
+        except Exception:
+            spoiler = None
+        form = BuildASpoiler(spoiler=spoiler)
+        return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated, spoiler = spoiler)
+    else:
+        return redirect(url_for('Login',error_message = "Login to build a spoiler (We don't want people spamming their friends anonymously)"))
 
 
 counter = lambda c=count(): next(c)
 @app.route("/scheduler-spoiler",methods=['GET','POST'])
 def scheduler_spoiler():
-    dat = request.form.to_dict()
-    form = BuildASpoiler()
-    newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
-    db.session.add(newSpoiler)
-    db.session.commit()
-    app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
-    return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
+    if(current_user.is_authenticated):
+        dat = request.form.to_dict()
+        form = BuildASpoiler()
+        newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
+        db.session.add(newSpoiler)
+        db.session.commit()
+        app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
+        return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
+    else:
+        return redirect(url_for('Login',error_message = "Login to schedule a spoiler (We don't want people spamming their friends anonymously)"))
 
 def schedule_email(email,spoiler):
     send_email(email, "This is not a spoiler", spoiler)
+
+@app.route("/spoiler-history")
+def spoiler_history():
+    if(current_user.is_authenticated):
+        data = SentSpoiler.query.filter_by(from_user=session['email']).all()
+        return render_template('spoilers/history.html', loggedin = current_user.is_authenticated, data = list(data))
+    else:
+        return redirect(url_for('Login',error_message = "Login to view your sent spoiler history"))
 
 #endregion
 
 
 @app.route("/")
 def landing_page():
-    print(current_user.is_authenticated)
     return render_template('landing_page.html', loggedin = current_user.is_authenticated)
 
-@app.route("/spoiler-history")
-def spoiler_history():
-    data = SentSpoiler.query.filter_by(from_user=session['email']).all()
-    print(data)
-    return render_template('spoilers/history.html', loggedin = current_user.is_authenticated, data = list(data))
+@app.route("/about-us")
+def about_us():
+    return render_template('about_us.html', loggedin = current_user.is_authenticated)
 
+
+@app.route("/user-settings")
+def user_settings():
+    if(current_user.is_authenticated):
+        return render_template('user_management/user_settings.html', loggedin = current_user.is_authenticated)
+    else:
+        return redirect(url_for('Login',error_message = "Login first !"))
 
 
 if __name__ == '__main__':
