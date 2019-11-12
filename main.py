@@ -121,6 +121,10 @@ class BuildASpoiler(FlaskForm):
     movie_name = StringField('movie_name',  validators=[InputRequired(), Length(max=30)])
     victim_email = StringField('Email', validators=[InputRequired(), Email(message='Invalid email'), Length(max=30)])
     spoiler = TextAreaField('spoiler',  validators=[InputRequired()], id="spoiler")
+
+class ContactUsForm(FlaskForm):
+    from_name = StringField('from_name',  validators=[InputRequired(), Length(max=30)])
+    message = StringField('message',  validators=[InputRequired(), Length(max=30)])
 #endregion
 
 '''
@@ -303,13 +307,17 @@ def about_us():
     return render_template('about_us.html', loggedin = current_user.is_authenticated)
 
 
-@app.route("/user-settings")
+@app.route("/contact",methods=['GET','POST'])
 def user_settings():
+    form = ContactUsForm()
     if(current_user.is_authenticated):
-        return render_template('user_management/user_settings.html', loggedin = current_user.is_authenticated)
+        if request.method == "GET":
+            return render_template('user_management/contact.html', loggedin = current_user.is_authenticated, form=form)
+        else:
+            send_email("yahia@yahiabakour.com", "CONTACT FORM FILLED BY : " + form.from_name.data, "MESSAGE : " + form.message.data)
+            return render_template('user_management/contact.html', loggedin = current_user.is_authenticated, form=form, message="Thank you for contacting us, we'll be intouch shortly")
     else:
         return redirect(url_for('Login',error_message = "Login first !"))
-
 
 if __name__ == '__main__':
     app.run(debug=True)

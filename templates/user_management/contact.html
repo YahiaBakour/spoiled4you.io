@@ -1,6 +1,4 @@
-{% extends "layout.html" %}
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{% extends 'layout.html' %}
 
 
 
@@ -9,24 +7,28 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="static/css/bubbles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Login to your Account</title>
+    <title>Contact Us</title>
 {% endblock %}
 
 
 {% block content %}
   
     <div class="main-w3layouts wrapper">
-        <h1 style="color:white;" class="sign">User Settings</h1>
-        {% if error %}
-            <div class="isa_error" >
-                    <i class="fa fa-times-circle"></i>
-            {{ error }}</div>
+        <h1 style="color:white;" class="sign">Contact Us</h1>
+        {% if message %}
+            <div class="isa_success" >
+                    <i class="fas fa-check"></i>
+            {{ message }}</div>
         {% endif %}
         <div class="main-agileinfo">
             <div class="agileits-top">
-                <form style="text-align:center;" action="/login" method="post">
-                    <p>Email : </p>
-                    <p>Change Password : </p>    
+                <form style="text-align:center;" action="/contact" method="post">
+                        {{ form.from_name(class_="input", placeholder="Your Name", id="from_name")}}
+                    <br />
+                        {{ form.message(class_="input", placeholder="What do you want to tell us?", id="message")}}
+                        {{ form.hidden_tag() }}
+                    <br/> <br />
+                    <input type="submit"  value="Send Message">
                 </form>
             </div>
         </div>

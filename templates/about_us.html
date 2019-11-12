@@ -19,10 +19,32 @@
         <br/>
         <br/>
         <br/>
-        <div class="container-2">
-            <h2 style="text-align: left;">The Premise</h2>
-            <p>The premise tsjbfksfbksjbfskbsf</p>
-              </div>
+        <div class="container-2 aboutus">
+            <h2 class="Section-title">How it started</h2>
+            <br/>
+            <p>For a while now, I've really wanted to build a project all on my own without anyone elses help that utilized cloud technology, remote DB, an architecture I designed, and some gimmicky aftertaste</p>
+            <br/>
+            <p>And then, this happened.</p> 
+            <br/>
+            <h2 class="Section-title">How does it work?</h2>
+            <br/>
+            <p> When you type in a movie name, we try to scrape the plot off wikipedia and generate a spoiler for you, sometimes it doesn't work because <b>to be frank</b>: I built this in my free time and out of boredom. </p>
+            <br/>
+            <h2 class="Section-title">How did you make it?</h2>
+            <br/>
+            <ul>
+              <li> Remote MySQL Database</li>
+              <li> HTML/CSS/Javascript/JQuery and personal swagger</li>
+              <li> Python & Flask with the Jinja2 templating engine</li>
+              <li> Google App Engine </li>
+              <li> Mad Design Skills </li>
+            </ul>
+            <br/>
+            <h2 class="Section-title">Will you add more features or is this it?</h2>
+            <br/>
+            <p> in all likelihood , I will forget about this and it will dissapear into the ether of lame half-baked web apps.</p>
+            
+          </div>
               <ul class="colorlib-bubbles">
                 <li></li>
                 <li></li>
@@ -43,9 +65,15 @@
 
 {% block style %}
 <style>
-html{
-    overflow: hidden;
+.section-title{
+  font-size:1.5em;
+
 }
+
+.aboutus{
+    text-align:left;
+  }
+
 .topofpage{
     letter-spacing: 2px;
 }
