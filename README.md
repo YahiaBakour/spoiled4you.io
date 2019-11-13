@@ -1,6 +1,6 @@
 # Spoiled4you.work
 
-https://sanguine-robot-258820.appspot.com/
+http://www.spoiled4you.work/
 
 ## By Yahia Bakour 
 
@@ -54,7 +54,7 @@ As a user, I'd like to be able to login and send a spoiler.
 
 As a user, I'd like to be able to login and see my history of sent spoilers
 
-As a user, I'd like to be able to generate spoilers/plots for the movie i select.\
+As a user, I'd like to be able to generate spoilers/plots for the movie i select.
 
 As a user, I want a clean UI.
 
