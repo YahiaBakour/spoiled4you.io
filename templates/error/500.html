@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+
+
+{% block head %}
+<title>
+    Error 404 Page
+</title>
+<link rel="stylesheet" type="text/css" href="static/css/bubbles.css" />
+
+{% endblock %}
+
+
+{% block content %}
+<div>
+    <img src="/static/images/confused_dog.jfif" alt="confused dog"  style="border-radius: 50%;"   >
+    <h1>Well this is awkward, looks like you did something you weren't supposed to.</h1>
+    <h3>( This can be our little secret )</h3>
+    <ul class="colorlib-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+</div>
+
+{% endblock %}
+
+
+{% block style %}
+<style>
+html{
+    overflow:hidden;
+}
+</style>
+
+{% endblock %}

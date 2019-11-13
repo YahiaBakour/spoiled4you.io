@@ -298,6 +298,8 @@ def spoiler_history():
 #endregion
 
 
+
+
 @app.route("/")
 def landing_page():
     return render_template('landing_page.html', loggedin = current_user.is_authenticated, justsignedup = request.args.get('justsignedup'))
@@ -318,6 +320,21 @@ def user_settings():
             return render_template('user_management/contact.html', loggedin = current_user.is_authenticated, form=form, message="Thank you for contacting us, we'll be intouch shortly")
     else:
         return redirect(url_for('Login',error_message = "Login first !"))
+
+
+
+
+#region error handling
+@app.errorhandler(404)
+def page_error(e):
+    return render_template('error/404.html', loggedin = current_user.is_authenticated), 404
+
+@app.errorhandler(500)
+@app.route('/error', methods = ['GET'])
+def exception_error():
+    return render_template('error/500.html', loggedin = current_user.is_authenticated), 500
+
+#endregion
 
 if __name__ == '__main__':
     app.run(debug=True)
