@@ -130,7 +130,7 @@ h1 {
 }
 
 .main-agileinfo {
-  width: 100%;
+  width: 45%;
   margin: 3em auto;
   background: rgba(0, 0, 0, 0.18);
   background-size: cover;
@@ -202,16 +202,17 @@ input.email, input.text.w3lpass {
 
 input[type="submit"] {
   font-size: .9em;
-  color: #fff;
-  background: #3A506B;
+  color: #471174;
+  background: #FDFFFC;
   outline: none;
-  border: 1px solid #3A506B;
+  border: 1px solid #FDFFFC;
   cursor: pointer;
   padding: 0.9em;
   -webkit-appearance: none;
   width: 100%;
   margin: 2em 0;
   letter-spacing: 4px;
+  width:70%;
 }
 
 input[type="submit"]:hover {
@@ -220,7 +221,9 @@ input[type="submit"]:hover {
   -o-transition: .5s all;
   -ms-transition: .5s all;
   transition: .5s all;
-  background: #A5AFBB;
+  background: #471174;
+  color: #FDFFFC;
+
 }
 
 .agileits-top p {
@@ -240,7 +243,7 @@ input[type="submit"]:hover {
 }
 
 .agileits-top p a:hover {
-  color: #3A506B;
+  color: #FDFFFC;
 }
 
 /*-- //main --*/
@@ -543,7 +546,7 @@ input.checkbox:checked:after {
   }
 
   .main-agileinfo {
-    width: 100%;
+    width: 45%;
   }
 }
 
@@ -577,7 +580,7 @@ input.checkbox:checked:after {
 
 @media(max-width:900px) {
   .main-agileinfo {
-    width: 100%;
+    width: 45%;
   }
 
   input[type="text"], input[type="email"], input[type="password"] {
@@ -624,7 +627,7 @@ input.checkbox:checked:after {
 
 @media(max-width:568px) {
   .main-agileinfo {
-    width: 100%;
+    width: 45%;
   }
 
   .colorlibcopy-agile p {
@@ -658,7 +661,7 @@ input.checkbox:checked:after {
   }
 
   .main-agileinfo {
-    width: 85%;
+    width: 45%;
     margin: 1.5em auto;
   }
 
@@ -691,7 +694,7 @@ input.checkbox:checked:after {
 
 @media(max-width:384px) {
   .main-agileinfo {
-    width: 88%;
+    width: 45%;
   }
 
   .colorlibcopy-agile p {
@@ -729,7 +732,7 @@ input.checkbox:checked:after {
   }
 
   .main-agileinfo {
-    width: 92%;
+    width: 40%;
     margin: 1em auto;
   }
 

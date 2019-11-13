@@ -16,7 +16,9 @@ $(document).ready(function(){
     })
 });
 
+
   </script>
+  
 {% endblock %}
 
 
@@ -43,7 +45,8 @@ $(document).ready(function(){
 
 {% block content %}
     <div class="main-w3layouts wrapper">
-            <h1 class="sign">Create your spoiler</h2>
+            <h1 class="sign">Create your spoiler</h1>
+            <p>Try <a href="JavaScript:void(0);" onclick='$("#movie_name").val("The Matrix");'>"the matrix"</a> </p>
         {% if error %}
             <div class="isa_error">
                     <i class="fa fa-times-circle"></i>
