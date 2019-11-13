@@ -1,6 +1,6 @@
 # Spoiled4you.work
 
-https://sanguine-robot-258820.appspot.com/
+http://www.spoiled4you.work/
 
 ## By Yahia Bakour 
 
