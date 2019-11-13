@@ -34,7 +34,6 @@ class Spoiler:
     def GenerateWikipediaSpoiler(self,MovieName):
         spoiler = ""
         search_results = wikipedia.search(MovieName)
-        print(search_results)
         if(len(search_results) == 1):
             plot = wikipedia.page(MovieName).section("Plot")
             if(plot is None):

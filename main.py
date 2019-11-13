@@ -154,7 +154,7 @@ def register_user():
                 db.session.add(newUser)
                 db.session.commit()
                 login_user(newUser)
-                return redirect(url_for('landing_page'))
+                return redirect(url_for('landing_page',justsignedup=True))
         return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
 
@@ -300,7 +300,7 @@ def spoiler_history():
 
 @app.route("/")
 def landing_page():
-    return render_template('landing_page.html', loggedin = current_user.is_authenticated)
+    return render_template('landing_page.html', loggedin = current_user.is_authenticated, justsignedup = request.args.get('justsignedup'))
 
 @app.route("/about-us")
 def about_us():
