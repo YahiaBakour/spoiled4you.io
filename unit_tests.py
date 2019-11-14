@@ -97,7 +97,7 @@ class BasicTests(unittest.TestCase):
     def test_valid_user_registration(self):
         response = self.register('meowmeow','meowmeow@gmail.com', 'FlaskIsAwesome', 'FlaskIsAwesome')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Congrats on signing up', response.data)
+        self.assertIn(b'movie_name', response.data)
         User.query.filter_by(email='meowmeow@gmail.com').delete()
         db.session.commit()
         
