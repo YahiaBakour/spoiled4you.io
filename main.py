@@ -275,13 +275,16 @@ counter = lambda c=count(): next(c)
 @app.route("/scheduler-spoiler",methods=['GET','POST'])
 def scheduler_spoiler():
     if(current_user.is_authenticated):
-        dat = request.form.to_dict()
-        form = BuildASpoiler()
-        newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
-        db.session.add(newSpoiler)
-        db.session.commit()
-        app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
-        return redirect(url_for('landing_page',message = "Congrats your spoiler was sent to : " + dat['victim_email']))
+        try:
+            dat = request.form.to_dict()
+            form = BuildASpoiler()
+            newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
+            db.session.add(newSpoiler)
+            db.session.commit()
+            app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
+            return redirect(url_for('landing_page',message = "Congrats your spoiler was sent to : " + dat['victim_email']))
+        except Exception as e:
+            return redirect(url_for('landing_page',message = "Whoops something went wrong, this is still a work in progress so sorry about that"))
     else:
         return redirect(url_for('Login',error_message = "Login to schedule a spoiler (We don't want people spamming their friends anonymously)"))
 
@@ -332,7 +335,6 @@ def page_error(e):
     return render_template('error/404.html', loggedin = current_user.is_authenticated), 404
 
 @app.errorhandler(500)
-@app.route('/error', methods = ['GET'])
 def exception_error():
     return render_template('error/500.html', loggedin = current_user.is_authenticated), 500
 

@@ -3,6 +3,18 @@
 {% block script %} 
 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script>
+var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+$( document ).ready(function() {
+            $('#movieform').submit(function (event) {
+                if($('#movie_name').val() == '' ||  re.test(String(($('#movie_name').val()).toLowerCase())) == false){
+                    alert( "Email format isn't right" );
+                    event.preventDefault();
+                }
+            });
+        });
+</script>
 {% endblock %}
 
 
