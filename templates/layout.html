@@ -6,8 +6,11 @@
 		{% block head %} <title>Spoiled For you</title> {% endblock %}
 		<meta name="description" content="A Web-Application made by Yahia Bakour which generates spoilers to be sent to your friends!" />
 		<meta name="keywords" content="Spoiled for you, Movie Spoiler, Spoiler, Spoiled4you, Spoiler, Spoil.io" />
-		<meta name="author" content="Yahia Bakour" />
-		<meta property='og:image' content='/static/images/siteimage.jpg"/>
+		<meta name="author" content="Yahia Bakour"/>
+		<meta property='og:image' content='/static/images/siteimage.jpg'/>
+		<meta property='og:title' content='Spoiled For You!'/>
+		<meta property='og:description' content='A Web-Application made by Yahia Bakour which generates spoilers to be sent to your friends!'/>
+		<meta property='og:url' content='http://www.spoiled4you.work/'/>
 		<link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/normalize.css') }}"/>
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}"/>
