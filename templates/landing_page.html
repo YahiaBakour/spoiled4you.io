@@ -30,10 +30,20 @@
             {% else %}
                 <a href="/login">
             {% endif %}
-                    <div class="btn btn-two">
+            <div class="desktop-button">
+                <div class="btn btn-two">
                     <span>Get Started</span>
                     </div>
-                </a>   
+            </div>
+            <div class="mobile-button">
+                  {% if loggedin %}
+                          <button class="mobilebutton"    onclick="window.location.href = '/pick-a-movie';"> Get Started</button>
+                  {% else %}
+                          <button class="mobilebutton"   onclick="window.location.href = '/login';"> Get Started </button>
+                  {% endif %}
+            </div>
+
+                  </a>   
               </div>
               <ul class="colorlib-bubbles">
                 <li></li>
@@ -54,7 +64,40 @@
 
 
 {% block style %}
+
 <style>
+  .mobilebutton {
+  background-color: #471174;
+  border: 2px solid #555555;
+  color: white;
+  width:100%;
+  padding: 0.5em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  letter-spacing: 1.5px;
+
+}
+
+.mobilebutton:hover {
+    background-color: white;
+    color: #471174;
+}
+.mobile-button{
+  display:none;
+}
+@media (max-width: 480px) {
+  .desktop-button {
+    display: none;
+  }
+  .mobile-button{
+    display:inline-block;
+  }
+}
 html{
   overflow: hidden;
 }
