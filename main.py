@@ -27,6 +27,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRETKEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://{0}:{1}@{2}/{3}'.format(dbuser,dbpass,dbhost,dbname)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = TRACKMODIFICATIONS
+app.config['SQLALCHEMY_POOL_RECYCLE'] = 600 - 1
 
 db = SQLAlchemy()
 db.init_app(app)
