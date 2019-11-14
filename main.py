@@ -154,6 +154,7 @@ def register_user():
                 newUser = User(name=form.name.data, email=form.email.data,password_hash=hashpass,number_interactions=1,date=date.today(),phone_number="")
                 db.session.add(newUser)
                 db.session.commit()
+                session['email'] = form.email.data
                 login_user(newUser)
                 return redirect(url_for('pick_movie',justsignedup=True))
         return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
@@ -278,12 +279,12 @@ def scheduler_spoiler():
         try:
             dat = request.form.to_dict()
             form = BuildASpoiler()
-            newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'], spoiler = dat['spoiler'])
+            newSpoiler = SentSpoiler(from_user = session['email'], to_email = dat['victim_email'].strip(), spoiler = dat['spoiler'])
             db.session.add(newSpoiler)
             db.session.commit()
             app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
             return redirect(url_for('landing_page',message = "Congrats your spoiler was sent to : " + dat['victim_email']))
-        except Exception as e:
+        except Exception:
             return redirect(url_for('landing_page',message = "Whoops something went wrong, this is still a work in progress so sorry about that"))
     else:
         return redirect(url_for('Login',error_message = "Login to schedule a spoiler (We don't want people spamming their friends anonymously)"))
