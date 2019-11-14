@@ -16,6 +16,13 @@
 <h3>This webapp allows you to generate a spoiler for <strike>all</strike> most movies and send them as emails to bug your friends</h3>
 <br/>
 <h3> Made by <span class="rainbow-name" style="cursor:pointer;" onclick="window.open('https://yahiabakour.com/', '_blank');">Yahia Bakour</span></h3>
+{% if message %}
+<div class="isa_success" >
+  <i class="fas fa-check-circle"></i>
+  {{ message }}
+</div>
+{% endif %}
+
 {% if justsignedup %}
 <div class="isa_success" >
   <i class="fas fa-check-circle"></i>

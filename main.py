@@ -155,7 +155,7 @@ def register_user():
                 db.session.add(newUser)
                 db.session.commit()
                 login_user(newUser)
-                return redirect(url_for('landing_page',justsignedup=True))
+                return redirect(url_for('pick_movie',justsignedup=True))
         return render_template('user_management/signup.html', form=form, loggedin = current_user.is_authenticated) #We should return a pop up error msg as well bad input
 
 
@@ -166,7 +166,7 @@ def Login():
     if request.method == 'GET':
         error_message = request.args.get('error_message')
         if current_user.is_authenticated == True:
-            return redirect(url_for('landing_page'))
+            return redirect(url_for('pick_movie'))
         return render_template('user_management/login.html', form=form, loggedin = current_user.is_authenticated, error=error_message)
 
     elif request.method == 'POST':
@@ -175,7 +175,7 @@ def Login():
             if check_password_hash(check_user.password_hash, form.password.data):
                 login_user(check_user)
                 session['email'] = form.email.data
-                return redirect(url_for('landing_page'))
+                return redirect(url_for('pick_movie'))
             return render_template('user_management/login.html', form=form, error="Incorrect password!", loggedin = current_user.is_authenticated)
         else:
             return render_template('user_management/login.html', form=form, error="Email doesn't exist!", loggedin = current_user.is_authenticated)
@@ -281,7 +281,7 @@ def scheduler_spoiler():
         db.session.add(newSpoiler)
         db.session.commit()
         app.apscheduler.add_job(func=schedule_email, trigger='date', args=[dat['victim_email'],dat['spoiler']], id='j' + str(counter))
-        return render_template('spoilers/build_a_spoiler.html', form = form, loggedin = current_user.is_authenticated)
+        return redirect(url_for('landing_page',message = "Congrats your spoiler was sent to : " + dat['victim_email']))
     else:
         return redirect(url_for('Login',error_message = "Login to schedule a spoiler (We don't want people spamming their friends anonymously)"))
 
@@ -303,7 +303,8 @@ def spoiler_history():
 
 @app.route("/")
 def landing_page():
-    return render_template('landing_page.html', loggedin = current_user.is_authenticated, justsignedup = request.args.get('justsignedup'))
+    message = request.args.get('message')
+    return render_template('landing_page.html', loggedin = current_user.is_authenticated, justsignedup = request.args.get('justsignedup'),message=message)
 
 @app.route("/about-us")
 def about_us():
