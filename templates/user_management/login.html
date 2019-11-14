@@ -36,7 +36,7 @@ $( document ).ready(function() {
                     <i class="fa fa-times-circle"></i>
             {{ error }}</div>
         {% endif %}
-        <div class="main-agileinfo">
+        <div class="main-agileinfo" style="padding:2em;">
             <div class="agileits-top">
                 <form style="text-align:center;" action="/login" method="post">
                         {{ form.email(class_="input", placeholder="Email", id="email")}}
@@ -51,18 +51,30 @@ $( document ).ready(function() {
                 </form>
             </div>
         </div>
-		<ul class="colorlib-bubbles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-            </ul>
+
     </div>
+    <ul class="colorlib-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+
+{% endblock %}
+
+
+{% block style %}
+<style>
+html{
+    overflow:hidden;
+}
+
+</style>
 
 {% endblock %}

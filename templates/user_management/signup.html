@@ -47,7 +47,7 @@
                     
             {{ error }}</div>
         {% endif %}
-        <div class="main-agileinfo">
+        <div class="main-agileinfo" style="padding:2em;">
             <div class="agileits-top">
                 <form id="registerForm" action="/signup" method="post" style="text-align:center">
                     {{ form.email(class_="input", placeholder="Email", id="email")}}
@@ -66,17 +66,29 @@
                 </form>
             </div>
         </div>
-		<ul class="colorlib-bubbles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-        </ul>
+
     </div>
+    <ul class="colorlib-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
+{% endblock %}
+
+
+{% block style %}
+<style>
+html{
+    overflow:hidden;
+}
+
+</style>
+
 {% endblock %}

@@ -78,7 +78,7 @@ class BasicTests(unittest.TestCase):
     def test_landing_page(self):            #Not Logged In, Should go straight to Login
         response = self.app.get('/', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Made by Yahia Bakour',response.data)
+        self.assertIn(b'Made by',response.data)
 
     def test_login_page(self):           #Not Logged In, Should go straight to page
         response = self.app.get('/login', follow_redirects=True)
